@@ -1,4 +1,4 @@
-librd0ry IEEE;
+library IEEE;
 use IEEE.STD_LOGIC_1164.all;
 
 entity mux_4 is
