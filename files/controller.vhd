@@ -1,7 +1,7 @@
 library IEEE; use IEEE.STD_LOGIC_1164.all;
 entity controller is -- single cycle control decoder
 	port (op, funct: in STD_LOGIC_VECTOR (5 downto 0);
-            alusrc: in STD_LOGIC_VECTOR (1 downto 0);
+            alusrc: out STD_LOGIC_VECTOR (1 downto 0);
 			zero: in STD_LOGIC;
 			memtoreg, memwrite: out STD_LOGIC;
 			pcsrc: out STD_LOGIC;
