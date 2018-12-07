@@ -12,6 +12,7 @@ process (aluop, funct) begin
 	case aluop is
 		when "00" => alucontrol <= "100000"; -- add (for 1b/sb/addi)
 		when "01" => alucontrol <= "100010"; -- sub (for beq)
+        when "10" => alucontrol <= "100100"; -- and (for andi)
 		when others => alucontrol <= funct; -- R-type instructions
 	end case;
 end process;
