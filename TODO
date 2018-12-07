@@ -6,11 +6,10 @@ Testbench ALU
 
 === ANDI ===
 
-Mettre à jour datapath pour ajouter le mux4 et zeroext
-
+Mettre à jour datapath pour ajouter le mux4 et zeroext x
 Changer controler pour le nouveau mux-4 X
 Ajouter code registre ANDI X
-Remplacer le Mux-4 
+Remplacer le Mux-4 x
 Mettre a jout ALU-control pour le nouvel ALU X
 
 === JR === 

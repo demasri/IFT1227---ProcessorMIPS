@@ -4,8 +4,9 @@ IEEE.STD_LOGIC_ARITH.all;
 entity datapath is -- MIPS datapath
 	port(	clk, reset: in STD_LOGIC;
 			memtoreg, pcsrc: in STD_LOGIC;
-			alusrc, regdst: in STD_LOGIC;
+			regdst: in STD_LOGIC;
 			regwrite, jump: in STD_LOGIC;
+			alusrc: in STD_LOGIC_VECTOR (1 downto 0);
 			alucontrol: in STD_LOGIC_VECTOR (5 downto 0);
 			zero, overflow: out STD_LOGIC;
 			pc: buffer STD_LOGIC_VECTOR (31 downto 0);
@@ -16,10 +17,11 @@ end;
 
 architecture struct of datapath is
 	component alu
-		port(	a, b: in STD_LOGIC_VECTOR(31 downto 0);
+		port(a, b: in STD_LOGIC_VECTOR(31 downto 0);
 				f: in STD_LOGIC_VECTOR (5 downto 0);
-				z, o : out STD_LOGIC;
-				y: buffer STD_LOGIC_VECTOR(31 downto 0));
+			shamt: in STD_LOGIC_VECTOR(4 downto 0);
+			z, o : out STD_LOGIC;
+				y: out STD_LOGIC_VECTOR(31 downto 0));
 	end component;
 	component regfile
 		port(	clk: in STD_LOGIC;
@@ -50,9 +52,20 @@ architecture struct of datapath is
 				s: in STD_LOGIC;
 				y: out STD_LOGIC_VECTOR (width-1 downto 0));
 	end component;
+	component mux4 generic (width: integer);
+		port(	d0, d1, d2, d3: in STD_LOGIC_VECTOR(width-1 downto 0);
+    			s: in STD_LOGIC_VECTOR(1 downto 0);
+   				y: out STD_LOGIC_VECTOR(width-1 downto 0));
+	end component;
+	component zeroext
+		port (
+			a: in STD_LOGIC_VECTOR (15 downto 0);
+			y: out STD_LOGIC_VECTOR (31 downto 0));			
+		);
+	end component;
 	signal writereg: STD_LOGIC_VECTOR (4 downto 0);
 	signal pcjump, pcnext, pcnextbr, pcplus4, pcbranch: STD_LOGIC_VECTOR (31 downto 0);
-	signal signimm, signimmsh: STD_LOGIC_VECTOR (31 downto 0);
+	signal signimm, zeroimm, signimmsh: STD_LOGIC_VECTOR (31 downto 0);
 	signal srca, srcb, result: STD_LOGIC_VECTOR (31 downto 0);
 	
 begin
@@ -69,7 +82,8 @@ begin
 	wrmux: mux2 generic map(5) port map(instr(20 downto 16),instr(15 downto 11), regdst, writereg);
 	resmux: mux2 generic map(32) port map(aluout, readdata, memtoreg, result);
 	se: signext port map(instr(15 downto 0), signimm);
+	ze: zeroext port map(instr(15 downto 0), zeroimm);
 -- ALU logic
-	srcbmux: mux2 generic map (32) port map(writedata, signimm, alusrc, srcb);
-	mainalu: alu port map(srca, srcb, alucontrol, zero, overflow, aluout);
+	srcbmux: mux4 generic map (32) port map(writedata, signimm, zeroimm, zeroimm, alusrc, srcb);
+	mainalu: alu port map(srca, srcb, alucontrol, instr(10 downto 6), zero, overflow, aluout);
 end;
