@@ -14,14 +14,13 @@ architecture behave of maindec is
 begin
 process(op) begin
 	case op is
-		when "000000" => controls <= "11000000010"; -- Rtyp
+		when "000000" => controls <= "11000001000"; -- Rtyp
 		when "100011" => controls <= "10001001000"; -- LW
 		when "101011" => controls <= "00001010000"; -- SW
 		when "000100" => controls <= "00000100001"; -- BEQ
 		when "001000" => controls <= "10001000000"; -- ADDI
 		when "000010" => controls <= "00010000100"; -- J
       when "001100" => controls <= "10000000010"; -- andi
-      --when "001000" => controls <= "00000001011"; -- JR
 		when others   => controls <= "-----------"; -- illegal op
 	end case;
 end process;
