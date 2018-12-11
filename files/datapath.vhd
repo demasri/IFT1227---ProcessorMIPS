@@ -5,14 +5,14 @@ entity datapath is -- MIPS datapath
 	port(	clk, reset: in STD_LOGIC;
 			memtoreg, pcsrc: in STD_LOGIC;
 			regdst: in STD_LOGIC;
-			regwrite, jump: in STD_LOGIC;			
+			regwrite: in STD_LOGIC;			
 			alucontrol: in STD_LOGIC_VECTOR (5 downto 0);
 			zero, overflow: out STD_LOGIC;
 			pc: buffer STD_LOGIC_VECTOR (31 downto 0);
 			instr: in STD_LOGIC_VECTOR(31 downto 0);
 			aluout, writedata: buffer STD_LOGIC_VECTOR (31 downto 0);
 			readdata: in STD_LOGIC_VECTOR(31 downto 0);
-			alusrc: in STD_LOGIC_VECTOR (1 downto 0));
+			alusrc, jump: in STD_LOGIC_VECTOR (1 downto 0));
 end;
 
 architecture struct of datapath is
@@ -75,7 +75,7 @@ begin
 	immsh: sl2 port map(signimm, signimmsh);
 	pcadd2: adder port map(pcplus4, signimmsh, pcbranch);
 	pcbrmux: mux2 generic map(32) port map(pcplus4, pcbranch, pcsrc, pcnextbr);
-	pcmux: mux4 generic map(32) port map(pcnextbr, pcjump, readdata, 0, jump, pcnext);
+	pcmux: mux4 generic map(32) port map(pcnextbr, pcjump, readdata, readdata, jump, pcnext);
 -- register file logic
 	rf: regfile port map(clk, regwrite, instr(25 downto 21),instr(20 downto 16), writereg, result, srca, writedata);
 	wrmux: mux2 generic map(5) port map(instr(20 downto 16),instr(15 downto 11), regdst, writereg);
@@ -83,6 +83,6 @@ begin
 	se: signext port map(instr(15 downto 0), signimm);
 	ze: zeroext port map(instr(15 downto 0), zeroimm);
 -- ALU logic
-	srcbmux: mux4 generic map (32) port map(writedata, signimm, zeroimm, 0, alusrc, srcb);
+	srcbmux: mux4 generic map (32) port map(writedata, signimm, zeroimm, zeroimm, alusrc, srcb);
 	mainalu: alu port map(srca, srcb, alucontrol, instr(10 downto 6), zero, overflow, aluout);
 end;

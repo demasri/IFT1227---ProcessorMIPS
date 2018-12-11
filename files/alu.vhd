@@ -7,7 +7,7 @@ entity alu is
 			f: in STD_LOGIC_VECTOR (5 downto 0);
 			shamt: in STD_LOGIC_VECTOR(4 downto 0);
 			z, o : out STD_LOGIC;
-			y: out STD_LOGIC_VECTOR(31 downto 0));
+			y: out STD_LOGIC_VECTOR(31 downto 0));	
 end;
 architecture behave of alu is
 signal s, diff: STD_LOGIC_VECTOR(31 downto 0);
@@ -15,7 +15,7 @@ begin
 	diff <= a - b;
 	process (a, b, f, s, diff) begin
 		case f is
-			when "000000" => s <= b sll shamt;
+			when "000000" => s <= std_logic_vector(shift_left(unsigned(b), to_integer(unsigned(shamt)))); -- Solution pour le casting prise de: https://stackoverflow.com/questions/43101604/getting-error-for-vhdl-shift-left-operation
 			when "100000" => s <= a + b; --32 add
 			when "100010" => s <= a - b; --34 sub
 			when "100100" => s <= a and b; --36 and

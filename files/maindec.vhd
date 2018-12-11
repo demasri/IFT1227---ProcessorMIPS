@@ -20,9 +20,9 @@ process(op) begin
 		when "000100" => controls <= "00000100001"; -- BEQ
 		when "001000" => controls <= "10001000000"; -- ADDI
 		when "000010" => controls <= "00010000100"; -- J
-        when "001100" => controls <= "10000000010"; -- andi
-        when "001000" => controls <= "00000000100"; -- jr
-		when others => controls <= "----------"; -- illegal op
+      when "001100" => controls <= "10000000010"; -- andi
+      --when "001000" => controls <= "00000001011"; -- JR
+		when others   => controls <= "-----------"; -- illegal op
 	end case;
 end process;
 
