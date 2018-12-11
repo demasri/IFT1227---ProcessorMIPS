@@ -46,8 +46,8 @@ begin
 --end process;
 --end;
 
-process begin
-	shamt <= "00001";
-	b <= X"00000001";
-	wait for 5 ns;
-	assert s <= X"00000010"
+-- process begin
+	--shamt <= "00001";
+	--b <= X"00000001";
+	--wait for 5 ns;
+	--assert s <= X"00000010";

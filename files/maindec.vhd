@@ -10,7 +10,7 @@ entity maindec is -- main control decoder
 end;
 
 architecture behave of maindec is
-	signal controls: STD_LOGIC_VECTOR(8 downto 0);
+	signal controls: STD_LOGIC_VECTOR(9 downto 0);
 begin
 process(op) begin
 	case op is
@@ -20,8 +20,8 @@ process(op) begin
 		when "000100" => controls <= "0000100001"; -- BEQ
 		when "001000" => controls <= "1001000000"; -- ADDI
 		when "000010" => controls <= "0000000100"; -- J
-        when "001100" => controls <= "1010000010"; -- andi
-		when others => controls <= "---------"; -- illegal op
+      when "001100" => controls <= "1010000010"; -- andi
+		when others => controls <= "----------"; -- illegal op
 	end case;
 end process;
 

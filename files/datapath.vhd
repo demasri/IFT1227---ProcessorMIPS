@@ -5,14 +5,14 @@ entity datapath is -- MIPS datapath
 	port(	clk, reset: in STD_LOGIC;
 			memtoreg, pcsrc: in STD_LOGIC;
 			regdst: in STD_LOGIC;
-			regwrite, jump: in STD_LOGIC;
-			alusrc: in STD_LOGIC_VECTOR (1 downto 0);
+			regwrite, jump: in STD_LOGIC;			
 			alucontrol: in STD_LOGIC_VECTOR (5 downto 0);
 			zero, overflow: out STD_LOGIC;
 			pc: buffer STD_LOGIC_VECTOR (31 downto 0);
 			instr: in STD_LOGIC_VECTOR(31 downto 0);
 			aluout, writedata: buffer STD_LOGIC_VECTOR (31 downto 0);
-			readdata: in STD_LOGIC_VECTOR(31 downto 0));
+			readdata: in STD_LOGIC_VECTOR(31 downto 0);
+			alusrc: in STD_LOGIC_VECTOR (1 downto 0));
 end;
 
 architecture struct of datapath is
@@ -61,7 +61,6 @@ architecture struct of datapath is
 		port (
 			a: in STD_LOGIC_VECTOR (15 downto 0);
 			y: out STD_LOGIC_VECTOR (31 downto 0));			
-		);
 	end component;
 	signal writereg: STD_LOGIC_VECTOR (4 downto 0);
 	signal pcjump, pcnext, pcnextbr, pcplus4, pcbranch: STD_LOGIC_VECTOR (31 downto 0);
