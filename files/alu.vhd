@@ -15,7 +15,7 @@ begin
 	diff <= a - b;
 	process (a, b, f, s, diff) begin
 		case f is
-			when "000000" => s <= b shift_left() shamt;
+			when "000000" => s <= b sll shamt;
 			when "100000" => s <= a + b; --32 add
 			when "100010" => s <= a - b; --34 sub
 			when "100100" => s <= a and b; --36 and

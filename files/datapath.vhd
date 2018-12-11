@@ -75,7 +75,7 @@ begin
 	immsh: sl2 port map(signimm, signimmsh);
 	pcadd2: adder port map(pcplus4, signimmsh, pcbranch);
 	pcbrmux: mux2 generic map(32) port map(pcplus4, pcbranch, pcsrc, pcnextbr);
-	pcmux: mux2 generic map(32) port map(pcnextbr, pcjump, jump, pcnext);
+	pcmux: mux4 generic map(32) port map(pcnextbr, pcjump, readdata, 0, jump, pcnext);
 -- register file logic
 	rf: regfile port map(clk, regwrite, instr(25 downto 21),instr(20 downto 16), writereg, result, srca, writedata);
 	wrmux: mux2 generic map(5) port map(instr(20 downto 16),instr(15 downto 11), regdst, writereg);
@@ -83,6 +83,6 @@ begin
 	se: signext port map(instr(15 downto 0), signimm);
 	ze: zeroext port map(instr(15 downto 0), zeroimm);
 -- ALU logic
-	srcbmux: mux4 generic map (32) port map(writedata, signimm, zeroimm, zeroimm, alusrc, srcb);
+	srcbmux: mux4 generic map (32) port map(writedata, signimm, zeroimm, 0, alusrc, srcb);
 	mainalu: alu port map(srca, srcb, alucontrol, instr(10 downto 6), zero, overflow, aluout);
 end;
