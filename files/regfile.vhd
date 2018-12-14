@@ -23,14 +23,20 @@ process(clk) begin
 	end if;
 end process;
 
-process (ra1, ra2, clk) begin
-	if (conv_integer (ra1) = 0) then rd1 <= X"00000000";
+rd1 <= X"00000000" when conv_integer(ra1) = 0 else
+       mem(CONV_INTEGER (ra1));
+
+rd2 <= X"00000000" when conv_integer(ra2) = 0 else
+       mem(CONV_INTEGER(ra2));
+
+--process (ra1, ra2, clk) begin
+--	if (conv_integer (ra1) = 0) then rd1 <= X"00000000";
 	-- register 0 holds 0
-	else rd1 <= mem(CONV_INTEGER (ra1));
-	end if;
-	if (conv_integer(ra2) = 0) then rd2 <= X"00000000";
-	else rd2 <= mem(CONV_INTEGER(ra2));
-	end if;
-end process;
+--	else rd1 <= mem(CONV_INTEGER (ra1));
+--	end if;
+--	if (conv_integer(ra2) = 0) then rd2 <= X"00000000";
+--	else rd2 <= mem(CONV_INTEGER(ra2));
+--	end if;
+--end process;
 
 end;

@@ -35,11 +35,49 @@ end process;
 -- at end of program
 process (clk) begin
 	if (clk'event and clk = '0' and memwrite = '1') then
-		if (conv_integer(dataadr) = 84 and conv_integer(writedata) = 7) then
-			report "Simulation succeeded";
-		elsif (dataadr /= 80) then
-			report "Simulation failed";
-		end if;
+	  case conv_integer(dataadr) is
+	    when 80 => if(conv_integer(writedata) = 7) then
+			             report "test 1 réussi";
+	               else
+	                  report "test 1 echoué";
+	               end if;
+	    when 60 => if(conv_integer(writedata) = 7) then
+			             report "test 2 réussi";
+	               else
+	                  report "test 2 echoué";
+	               end if;
+	    when 56 => if(conv_integer(writedata) = 7) then
+			             report "test 3 réussi";
+	               else
+	                  report "test 3 echoué";
+	               end if;  
+		  when 64 => if(writedata = X"00007FFF") then
+			             report "test 4 réussi";
+	               else
+	                  report "test 4 echoué";
+	               end if;
+		  when 68 => if(conv_integer(writedata) = 127) then
+			             report "test 5 réussi";
+	               else
+	                  report "test 5 echoué";
+	               end if;
+		  when 72 => if(conv_integer(writedata) = 24) then
+			             report "test 6 réussi";
+	               else
+	                  report "test 6 echoué";
+	               end if;
+		  when 76 => if(conv_integer(writedata) = 0) then
+			             report "test 6 réussi";
+	               else
+	                  report "test 6 echoué";
+	               end if;
+		when 84 => if(conv_integer(writedata) = 1) then
+			             report "test 7 réussi";
+	               else
+	                  report "test 7 echoué";
+	               end if;
+	    when others => report "";
+	  end case;       
 	end if;
 end process;
 end;

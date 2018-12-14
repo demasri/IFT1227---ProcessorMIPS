@@ -5,7 +5,7 @@ use IEEE.STD_LOGIC_UNSIGNED.all; use IEEE.STD_LOGIC_ARITH.all;
 
 entity imem is -- instruction memory
 	port (a: in STD_LOGIC_VECTOR (5 downto 0);
-			rd: out STD_LOGIC_VECTOR (31 downto 0));
+			 rd: out STD_LOGIC_VECTOR (31 downto 0));
 end;
 
 architecture behave of imem is
@@ -22,25 +22,43 @@ begin
 		for i in 0 to 63 loop 
 			mem(conv_integer(i)) := CONV_STD_LOGIC_VECTOR (0, 32);
 		end loop;
-		mem(0) := X"20020005";
-		mem(1) := X"2003000c";
-		mem(2) := X"2067fff7";
-		mem(3) := X"00e22025";
-		mem(4) := X"00642824";
-		mem(5) := X"00a42820";
-		mem(6) := X"10a7000a";
-		mem(7) := X"0064202a";
-		mem(8) := X"10800001";
-		mem(9) := X"20050000";
-		mem(10) := X"00e2202a";
-		mem(11) := X"00853820";
-		mem(12) := X"00e23822";
-		mem(13) := X"ac670044";
-		mem(14) := X"8c020050";
-		mem(15) := X"08000011";
-		mem(16) := X"20020001";
-		mem(17) := X"ac020054";
-		
+		mem(0) := X"20020005";	--			addi 	$2, $0, 5		# $2 = 5
+		mem(1) := X"2003000c";	--			addi 	$3, $0, 12		# $3 = 12
+		mem(2) := X"2067fff7";	--			addi 	$7, $3, -9		# $7 = $3(12) - 9 = 3
+		mem(3) := X"00e22025";	--			or 		$4, $7, $2		# $4 = $7(3) or $2(5) = 7
+		mem(4) := X"00642824";	--			and 	$5, $3, $4		# $5 = $3(12) and $4(7) = 4
+		mem(5) := X"00a42820";	--			add 	$5, $5, $4		# $5 = $5(4) + $4(7) = 11
+		mem(6) := X"10a7000a";	--			beq 	$5, $7, end		# $5(11) == $7(3) ? end : continue
+		mem(7) := X"0064202a";	--			slt 	$4, $3, $4		# $3(12) < $4(7)? $4 = 1 : $4 = 0
+		mem(8) := X"10800001";	--			beq 	$4, $0, around	# $4(0) == 0 ? around : continue
+		mem(9) := X"20050000";	--			addi 	$5, $0, 0
+		mem(10) := X"00e2202a";	--around: 	slt 	$4, $7, $2		# $7(3) < $2(5) ? $4 = 1 : $4 = 0
+		mem(11) := X"00853820";	--			add 	$7, $4, $5		# $7 = $4(1)+$5(11) = 12
+		mem(12) := X"00e23822";	--			sub 	$7, $7, $2		# $7 = $7(12) - $2(5) = 7
+		mem(13) := X"ac670044";	--			sw 		$7, 68($3)		# $7(7) -> M[68+$3(12)=80]#test 1
+		mem(14) := X"8c020050";	--			lw 		$2, 80($0)		# $2 = M[80+0](7) = 7
+		mem(15) := X"08000011";	--			j 		end				# goto end
+		mem(16) := X"20020001";	--			addi 	$2, $0, 1
+		mem(17) := X"ac02003C";	--end: 		sw 		$2, 60($0) 		# write adr 60=7; test 2
+		mem(18) := X"30A5FFF3"; -- 			andi 	$5,$5,0xFFF3	# $5(11) = $5(11) and 0xFFF3 = 3
+		mem(19) := X"9009003c"; --			lbu		$9,60($0)		# $9(0) = M[60](7) = 7; 
+		mem(20) := X"ac090038"; -- 			sw 		$9,56($0)		# $9(7) -> M[56]; test 3
+		mem(21) := X"20027fff"; --			addi	$2,$0,0x7FFF	# $2(7) = 0x00007FFF
+		mem(22) := X"ac020040"; -- 			sw 		$2, 64($0)		# $2(0x00007FFF) -> M[64]; test 4
+		mem(23) := X"90080041"; --			lbu		$8, 65($0)		# $8(0) = M[65](7F) => 7F
+		mem(24) := X"ac080044"; -- 			sw 		$8, 68($0)		# $8(7F) -> M[68](0) => 7F; test 5
+		mem(25) := X"00031840"; -- 			sll 	$3, $3, 1		# $3(12) << 1 = $3(24)
+		mem(26) := X"ac030048"; -- 			sw 		$3, 72($0)		# $3(24) -> M[72](0) => 24; test 6
+		mem(27) := X"0c00001d"; -- 			jal 	f				# call f
+		mem(28) := X"0800001f"; -- 			j		cont
+		mem(29) := X"20040000"; -- f:		addi	$4,$0,0			# $4(1) = 0			
+		mem(30) := X"03e00008"; --			jr 		$ra
+		mem(31) := X"3c048000";	--cont:		lui 	$4,0x8000		# $4(0) = 0x80000000
+		mem(32) := X"3484ffff";	--			ori		$4,$4,0xFFFF	# $4(0x80000000)or 0x0000FFFF = $4(0x8000FFFF)
+		mem(33) := X"0004282b";	--			sltu	$5,$0,$4		# $0 < $4(0x8000FFFF)? $5 = 1 : $5 = 0 => $5 = 1
+		mem(34) := X"0004102a";	--			slt		$2,$0,$4		# $0 < $4(0x8000FFFF)? $2(7) = 1 : $2(7) = 0 => $2 = 0
+		mem(35) := X"ac02004c";	--			sw		$2,76($0)		# $2(0) -> M[76](0x00007FFF) => 0; test 6
+		mem(36) := X"ac050054";	--			sw		$5,84($0)		# $5(1) -> M[80](0x0000000F) => 1; test 7			
 	-- read memory
 		rd <= mem(CONV_INTEGER(a));
 end process;
