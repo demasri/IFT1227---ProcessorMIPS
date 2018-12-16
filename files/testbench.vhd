@@ -37,44 +37,44 @@ process (clk) begin
 	if (clk'event and clk = '0' and memwrite = '1') then
 	  case conv_integer(dataadr) is
 	    when 80 => if(conv_integer(writedata) = 7) then
-			             report "test 1 réussi";
+			             report "test 1 rï¿½ussi";
 	               else
-	                  report "test 1 echoué";
+	                  report "test 1 echouï¿½";
 	               end if;
 	    when 60 => if(conv_integer(writedata) = 7) then
-			             report "test 2 réussi";
+			             report "test 2 rï¿½ussi";
 	               else
-	                  report "test 2 echoué";
+	                  report "test 2 echouï¿½";
 	               end if;
 	    when 56 => if(conv_integer(writedata) = 7) then
-			             report "test 3 réussi";
+			             report "test 3 rï¿½ussi";
 	               else
-	                  report "test 3 echoué";
+	                  report "test 3 echouï¿½";
 	               end if;  
 		  when 64 => if(writedata = X"00007FFF") then
-			             report "test 4 réussi";
+			             report "test 4 rï¿½ussi";
 	               else
-	                  report "test 4 echoué";
+	                  report "test 4 echouï¿½";
 	               end if;
 		  when 68 => if(conv_integer(writedata) = 127) then
-			             report "test 5 réussi";
+			             report "test 5 rï¿½ussi";
 	               else
-	                  report "test 5 echoué";
+	                  report "test 5 echouï¿½";
 	               end if;
 		  when 72 => if(conv_integer(writedata) = 24) then
-			             report "test 6 réussi";
+			             report "test 6 rï¿½ussi";
 	               else
-	                  report "test 6 echoué";
+	                  report "test 6 echouï¿½";
 	               end if;
 		  when 76 => if(conv_integer(writedata) = 0) then
-			             report "test 6 réussi";
+			             report "test 6 rï¿½ussi";
 	               else
-	                  report "test 6 echoué";
+	                  report "test 6 echouï¿½";
 	               end if;
 		when 84 => if(conv_integer(writedata) = 1) then
-			             report "test 7 réussi";
+			             report "test 7 rï¿½ussi";
 	               else
-	                  report "test 7 echoué";
+	                  report "test 7 echouï¿½";
 	               end if;
 	    when others => report "";
 	  end case;       
